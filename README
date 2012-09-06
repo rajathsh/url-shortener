@@ -1,0 +1,47 @@
+Requirements:
+
+bottle
+redis
+
+Installation:
+
+$ sudo pip install bottle
+$ sudo pip install redis
+$ wget http://redis.googlecode.com/files/redis-2.4.17.tar.gz
+$ tar xzf redis-2.4.17.tar.gz
+$ cd redis-2.4.17
+$ make
+
+
+Running URL Shortener:
+
+$ src/redis-server
+
+$python urlshortener.py
+
+$python test_urlshortener.py
+
+
+Design trade-offs:
+
+The URL shortener service needs to be very fast with less latency.
+THe key-value storage schema of redis comes in handy while delivering 
+quick lookup and redirection service to the clients. 
+The in-memory persistent storage also helps in reducing the latency of the service.
+Redis provides us with mechanism to back-up the in-memory data onto the disk.
+Depending on the needed reliability and latency constraints we can back-up the
+data onto disks as frequently necessary without causing performance delays.
+
+I have used HTTP 301 redirect instead of the HTTP 302 redirect. 
+Using Http 301 informs the client that the website it is requesting for has 
+moved permanently to the new address, which in our case would point to 
+the long_url. Whereas Http 302 informs the client that the move is temporary. 
+Also using 301 redirects will cause the long_url to show up in search engine results 
+whereas 302 causes the shortened url to show up in the search engine results.
+
+
+References:
+
+http://bottlepy.org
+https://github.com/andymccurdy/redis-py
+http://redis.io
